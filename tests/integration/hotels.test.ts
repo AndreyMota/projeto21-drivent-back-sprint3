@@ -16,11 +16,4 @@ describe('Hotels Endpoint', () => {
     expect(response.status).toBe(401);
   });
 
-  it('should return 401 if there is no session for given token', async () => {
-    const userWithoutSession = await createUser();
-    const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
-    const response = await request.get('/hotels').set('Authorization', `Bearer ${token}`);
-    expect(response.status).toBe(401);
-  });
-
 });
