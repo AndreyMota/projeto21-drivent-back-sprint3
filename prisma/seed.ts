@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -16,7 +17,25 @@ async function main() {
     });
   }
 
-  console.log({ event });
+  const remoteTicketType = await prisma.ticketType.create({
+    data: {
+      name: "Remote Ticket",
+      price: 50, // Defina o preço desejado
+      isRemote: true,
+      includesHotel: false,
+    },
+  });
+
+  const localTicketType = await prisma.ticketType.create({
+    data: {
+      name: "Local Ticket with Hotel",
+      price: 100, // Defina o preço desejado
+      isRemote: false,
+      includesHotel: true,
+    },
+  });
+
+  console.log({ event, remoteTicketType, localTicketType });
 }
 
 main()

@@ -57,15 +57,25 @@ async function validateUserEnrollmentTicketPaidAndIncludesHotelOrFail(userId: nu
     throw notFoundError();
   }
 
+  if (!userEnrollment.Ticket){
+    throw notFoundError();
+  }
+
+
   // Verifica se o ticket está pago
-  if (userEnrollment.Ticket.status !== 'PAID') {
+  if (userEnrollment.Ticket.status != 'PAID') {
     throw paymentRequiredError('Ticket not paid');
+  }
+
+  if (userEnrollment.Ticket.TicketType.isRemote) {
+    throw paymentRequiredError('Ticket is remote')
   }
 
   // Verifica se o ticket inclui hospedagem
   if (!userEnrollment.Ticket.TicketType.includesHotel) {
     throw paymentRequiredError('Ticket does not include hotel');
   }
+  
 
   return userEnrollment;
 }
