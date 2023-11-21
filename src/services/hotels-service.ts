@@ -82,8 +82,13 @@ async function validateUserEnrollmentTicketPaidAndIncludesHotelOrFail(userId: nu
   return userEnrollment;
 }
 
-async function getHotelsById(hotelId: number) {
+async function getHotelsById(hotelId: number, userId: number) {
   try {
+    // Se userId for fornecido, verifica se o usuário tem uma inscrição com um ticket pago que inclua a hospedagem
+    if (userId) {
+      await validateUserEnrollmentTicketPaidAndIncludesHotelOrFail(userId);
+    }
+
     // Verifica se o hotel existe
     const hotel = await prisma.hotel.findUnique({
       where: {
@@ -106,7 +111,6 @@ async function getHotelsById(hotelId: number) {
       throw notFoundError();
     }
 
-    // Retorna os detalhes do hotel, incluindo os quartos
     return hotel;
   } catch (error) {
     throw error;
