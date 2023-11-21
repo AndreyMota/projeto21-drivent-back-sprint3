@@ -30,7 +30,9 @@ async function getHotels(userId: number) {
         }, */
       },
     });
-
+    if (!hotels) {
+      throw notFoundError();
+    }
     return hotels;
   } catch (error) {
     throw error; // Repasse qualquer erro para ser tratado no controlador
