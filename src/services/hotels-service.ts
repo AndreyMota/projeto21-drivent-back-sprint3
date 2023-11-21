@@ -30,7 +30,7 @@ async function getHotels(userId: number) {
         }, */
       },
     });
-    if (!hotels) {
+    if (hotels.length < 1) {
       throw notFoundError();
     }
     return hotels;
@@ -82,6 +82,38 @@ async function validateUserEnrollmentTicketPaidAndIncludesHotelOrFail(userId: nu
   return userEnrollment;
 }
 
+async function getHotelsById(hotelId: number) {
+  try {
+    // Verifica se o hotel existe
+    const hotel = await prisma.hotel.findUnique({
+      where: {
+        id: hotelId,
+      },
+      include: {
+        Rooms: {
+          select: {
+            id: true,
+            name: true,
+            capacity: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+      },
+    });
+
+    if (!hotel) {
+      throw notFoundError();
+    }
+
+    // Retorna os detalhes do hotel, incluindo os quartos
+    return hotel;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const hotelsService = {
   getHotels,
+  getHotelsById,
 };
